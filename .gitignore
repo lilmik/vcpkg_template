@@ -1,0 +1,7 @@
+# 排除VSCode配置目录
+.vscode/
+.qtcreator/
+
+# 排除构建目录及其所有内容
+build/
+vcpkg_installed/

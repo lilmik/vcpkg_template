@@ -1,0 +1,177 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "base-config",
+            "hidden": true,
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_HOST_TRIPLET": "x64-linux"
+            }
+        },
+        {
+            "name": "microear-x64-linux-dynamic",
+            "displayName": "x64 Linux Dynamic",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-x64-linux-dynamic",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-x64-linux-dynamic",
+                "VCPKG_HOST_TRIPLET": "x64-linux",
+                "BUILD_SHARED_LIBS": "ON",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-x64-linux-dynamic"
+            }
+        },
+        {
+            "name": "microear-x64-linux-dynamic-debug",
+            "displayName": "x64 Linux Dynamic Debug",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-x64-linux-dynamic-debug",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-x64-linux-dynamic",
+                "VCPKG_HOST_TRIPLET": "x64-linux",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_SHARED_LIBS": "ON",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-x64-linux-dynamic-debug"
+            }
+        },
+        {
+            "name": "microear-x64-linux-dynamic-release",
+            "displayName": "x64 Linux Dynamic Release",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-x64-linux-dynamic-release",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-x64-linux-dynamic",
+                "VCPKG_HOST_TRIPLET": "x64-linux",
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "ON",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-x64-linux-dynamic-release"
+            }
+        },
+        {
+            "name": "microear-x64-linux-static-debug",
+            "displayName": "x64 Linux Static Debug",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-x64-linux-static-debug",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-x64-linux-static",
+                "VCPKG_HOST_TRIPLET": "x64-linux",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_SHARED_LIBS": "OFF",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-x64-linux-static-debug"
+            }
+        },
+        {
+            "name": "microear-x64-linux-static-release",
+            "displayName": "x64 Linux Static Release",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-x64-linux-static-release",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-x64-linux-static",
+                "VCPKG_HOST_TRIPLET": "x64-linux",
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "OFF",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-x64-linux-static-release"
+            }
+        },
+        {
+            "name": "microear-arm64-linux-dynamic-debug",
+            "displayName": "ARM64 Linux Dynamic Debug",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-arm64-linux-dynamic-debug",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-arm64-linux-dynamic",
+                "VCPKG_HOST_TRIPLET": "arm64-linux",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_SHARED_LIBS": "ON",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-arm64-linux-dynamic-debug"
+            }
+        },
+        {
+            "name": "microear-arm64-linux-dynamic-release",
+            "displayName": "ARM64 Linux Dynamic Release",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-arm64-linux-dynamic-release",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-arm64-linux-dynamic",
+                "VCPKG_HOST_TRIPLET": "arm64-linux",
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "ON",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-arm64-linux-dynamic-release"
+            }
+        },
+        {
+            "name": "microear-arm64-linux-static-debug",
+            "displayName": "ARM64 Linux Static Debug",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-arm64-linux-static-debug",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-arm64-linux-static",
+                "VCPKG_HOST_TRIPLET": "arm64-linux",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_SHARED_LIBS": "OFF",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-arm64-linux-static-debug"
+            }
+        },
+        {
+            "name": "microear-arm64-linux-static-release",
+            "displayName": "ARM64 Linux Static Release",
+            "inherits": "base-config",
+            "binaryDir": "${sourceDir}/build/microear-arm64-linux-static-release",
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "microear-arm64-linux-static",
+                "VCPKG_HOST_TRIPLET": "arm64-linux",
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_SHARED_LIBS": "OFF",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/microear-arm64-linux-static-release"
+            }
+        },
+        {
+            "name": "default",
+            "displayName": "Default Configuration",
+            "inherits": "microear-x64-linux-dynamic"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "microear-x64-linux-dynamic",
+            "configurePreset": "microear-x64-linux-dynamic"
+        },
+        {
+            "name": "microear-x64-linux-dynamic-debug",
+            "configurePreset": "microear-x64-linux-dynamic-debug"
+        },
+        {
+            "name": "microear-x64-linux-dynamic-release",
+            "configurePreset": "microear-x64-linux-dynamic-release"
+        },
+        {
+            "name": "microear-x64-linux-static-debug",
+            "configurePreset": "microear-x64-linux-static-debug"
+        },
+        {
+            "name": "microear-x64-linux-static-release",
+            "configurePreset": "microear-x64-linux-static-release"
+        },
+        {
+            "name": "microear-arm64-linux-dynamic-debug",
+            "configurePreset": "microear-arm64-linux-dynamic-debug"
+        },
+        {
+            "name": "microear-arm64-linux-dynamic-release",
+            "configurePreset": "microear-arm64-linux-dynamic-release"
+        },
+        {
+            "name": "microear-arm64-linux-static-debug",
+            "configurePreset": "microear-arm64-linux-static-debug"
+        },
+        {
+            "name": "microear-arm64-linux-static-release",
+            "configurePreset": "microear-arm64-linux-static-release"
+        },
+        {
+            "name": "default",
+            "configurePreset": "default"
+        }
+    ]
+}

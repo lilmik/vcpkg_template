@@ -1,0 +1,75 @@
+#ifndef VERSION_H
+#define VERSION_H
+
+#include <string>
+#include <cstdio>
+
+// 基础版本信息
+#define APP_NAME "@PROJECT_NAME@"
+#define APP_VERSION_MAJOR @APP_VERSION_MAJOR@
+#define APP_VERSION_MINOR @APP_VERSION_MINOR@
+#define APP_VERSION_PATCH @APP_VERSION_PATCH@
+#define APP_VERSION "@APP_VERSION@"
+
+// Git 信息
+#define GIT_INFO "@GIT_INFO@"
+
+// 构建时间
+#define BUILD_TIMESTAMP "@BUILD_TIMESTAMP@"
+
+// 构建类型
+#define BUILD_TYPE "@CMAKE_BUILD_TYPE@"
+
+// 完整版本字符串
+#define FULL_VERSION_STRING "@FULL_VERSION_STRING@"
+
+class VersionInfo {
+public:
+    // 获取基础版本号
+    static const char* version() { 
+        return APP_VERSION; 
+    }
+    
+    // 获取 Git 信息
+    static const char* gitInfo() {
+        return GIT_INFO;
+    }
+    
+    // 获取构建时间
+    static const char* buildTime() {
+        return BUILD_TIMESTAMP;
+    }
+    
+    // 获取构建类型
+    static const char* buildType() {
+        return BUILD_TYPE;
+    }
+    
+    // 获取完整版本字符串
+    static const char* fullVersion() {
+        return FULL_VERSION_STRING;
+    }
+    
+    // 获取格式化的版本信息
+    static std::string formattedVersion() {
+        char buffer[512];
+        snprintf(buffer, sizeof(buffer), 
+                "%s %s\n"
+                "Git: %s\n"
+                "Built: %s (%s)", 
+                APP_NAME, APP_VERSION, GIT_INFO, BUILD_TIMESTAMP, BUILD_TYPE);
+        return std::string(buffer);
+    }
+    
+    // 打印版本信息
+    static void print() {
+        printf("%s\n", fullVersion());
+    }
+    
+    // 打印详细版本信息
+    static void printDetailed() {
+        printf("%s\n", formattedVersion().c_str());
+    }
+};
+
+#endif // VERSION_H
