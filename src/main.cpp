@@ -7,6 +7,9 @@
 #include <QTimer>
 #include <QDebug>
 
+#include <drogon/drogon.h>
+#include <grpc/grpc.h>
+
 
 int main(int argc, char *argv[])
 {
@@ -99,8 +102,15 @@ int main(int argc, char *argv[])
         machine->submitEvent("stop");
     });
 
-    // 3 秒后退出程序
-    QTimer::singleShot(3000, &app, &QCoreApplication::quit);
+
+    // drogon gRPC Version
+    QString drogonVersionQStr = QString::fromUtf8(drogon::getVersion());
+    qDebug() << "drogon Version：" << drogonVersionQStr;
+
+    QString grpcVersionQStr = QString::fromUtf8(grpc_version_string());
+    qDebug() << "gRPC Version：" << grpcVersionQStr;
+    
+
 
     return app.exec();
 }

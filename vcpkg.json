@@ -1,11 +1,30 @@
 {
   "name": "qt-app",
   "version": "1.0.0",
-  "builtin-baseline": "dd3097e305afa53f7b4312371f62058d2e665320",
   "description": "A simple qt_app application",
   "dependencies": [
     "qtbase",
     "qtscxml",
-    "qt"
+    "grpc",
+    "drogon"
+  ],
+  "builtin-baseline": "0804e3b55b7e435c593707071052363fa876f170",
+  "overrides": [
+    {
+      "name": "qtbase",
+      "version": "6.8.3#5"
+    },
+    {
+      "name": "qtscxml",
+      "version": "6.8.3#0"
+    },
+    {
+      "name": "grpc",
+      "version": "1.71.0#3"
+    },
+    {
+      "name": "drogon",
+      "version": "1.9.11#0"
+    }
   ]
 }

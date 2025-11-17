@@ -1,0 +1,10 @@
+{
+  "name": "qt-app",
+  "version": "1.0.0",
+  "builtin-baseline": "dd3097e305afa53f7b4312371f62058d2e665320",
+  "description": "A simple qt_app application",
+  "dependencies": [
+    "qtbase",
+    "qtscxml"
+  ]
+}

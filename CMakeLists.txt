@@ -3,37 +3,15 @@
 # 新版本的CMakeLists.txt配置文件
 cmake_minimum_required(VERSION 3.20)
 
+# 1. 消除 Qt Creator vcpkg 自动配置警告
+set(QT_CREATOR_SKIP_VCPKG_SETUP ON CACHE BOOL "" FORCE)
+
 # 引入vcpkg工具链
-# 使用构建好的带vcpkg的alpine镜像来编译为完全静态链接的可执行文件
-# 镜像链接:https://hub.docker.com/r/ignislee/alpine319-static-compiler
-# 编译时发现了一些库提示缺失ICU和i18n,通过vcpkg补足
-
-# set(CMAKE_TOOLCHAIN_FILE "/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "vcpkg toolchain file" FORCE)
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    set(CMAKE_TOOLCHAIN_FILE
-        "/opt/vcpkg/scripts/buildsystems/vcpkg.cmake"
-        CACHE STRING "vcpkg toolchain file"
-    )
-endif()
-
+set(CMAKE_TOOLCHAIN_FILE "/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "vcpkg toolchain file" FORCE)
 set(VCPKG_TARGET_TRIPLET "microear-x64-linux-dynamic" CACHE STRING "" FORCE)
-set(VCPKG_HOST_TRIPLET   "microear-x64-linux-dynamic" CACHE STRING "" FORCE)
-
-
+set(VCPKG_HOST_TRIPLET "microear-x64-linux-dynamic" CACHE STRING "" FORCE)
 
 project(qt_app VERSION 0.0.1 LANGUAGES C CXX)
-
-# 根据 BUILD_SHARED_LIBS 判断是否使用静态链接
-# if(BUILD_SHARED_LIBS)
-#     message(STATUS "Configuring for dynamic linking")
-# else()
-#     message(STATUS "Configuring for static linking")
-#     
-#     # 设置静态链接标志
-#     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libstdc++ -static-libgcc")
-#     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
-#     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static")
-# endif()
 
 
 set(CMAKE_CXX_STANDARD 17)
@@ -55,7 +33,7 @@ find_package(Git)
 if(GIT_FOUND)
     message(STATUS "Found Git: ${GIT_EXECUTABLE}")
     
-    # Git 提交哈希（短）
+    # Git 提交哈希（long）
     execute_process(
         # COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
         COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
@@ -80,7 +58,7 @@ if(GIT_FOUND)
     )
     
     if(GIT_RESULT EQUAL 0 AND GIT_STATUS_OUTPUT STREQUAL "")
-        set(GIT_DIRTY "")
+        set(GIT_DIRTY "-Clean")
     else()
         set(GIT_DIRTY "-Dirty")
     endif()
@@ -201,6 +179,8 @@ set(RELEASE_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/output/release" CACHE PATH "Release 
 
 # 查找依赖
 find_package(Qt6 REQUIRED COMPONENTS Core Scxml)
+find_package(Drogon REQUIRED)
+find_package(gRPC REQUIRED)
 
 
 # 添加可执行文件
@@ -208,15 +188,6 @@ add_executable(qt_app
     src/main.cpp 
 )
 
-
-# 只有在静态构建时才添加静态链接选项
-# if(NOT BUILD_SHARED_LIBS)
-#     target_link_options(qt_app PRIVATE 
-#         "-static"
-#         "-static-libstdc++" 
-#         "-static-libgcc"
-#     )
-# endif()
 
 # 设置目标属性
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -231,6 +202,8 @@ target_link_libraries(qt_app
     PRIVATE 
     Qt6::Core
     Qt6::Scxml
+    Drogon::Drogon
+    gRPC::grpc
 )
 
 # === 把 XML 状态机文件拷贝到构建目录，运行时能直接读到 ===
@@ -238,4 +211,12 @@ configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/statemachine.scxml
     ${CMAKE_CURRENT_BINARY_DIR}/statemachine.scxml
     COPYONLY
+)
+
+
+include(GNUInstallDirs)
+install(TARGETS qt_app
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
