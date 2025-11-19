@@ -1,0 +1,14 @@
+帮我写一个脚本，来帮我安装vcpkg.
+1.使用linux环境
+2.git clone https://github.com/microsoft/vcpkg.git,这个需要调整，我需要把vcpkg clone到/opt/目录中，并注意要给sudo chmod 777 -R /opt/vcpkg权限
+3.后面需要使用普通账户把当前目录中的*.cmake全部拷贝到/opt/vcpkg/triplets/community/中
+4.需要执行/opt/vcpkg/bootstrap-vcpkg.sh脚本
+5.需要把下面的信息添加到～/.bashrc和/root/.bashrc的末尾，并source
+# vcpkg
+export VCPKG_ROOT=/opt/vcpkg
+export PATH=$VCPKG_ROOT:$PATH
+6.保证root账户或者普通账户都有/opt/vcpkg目录中文件的读写权限
+
+local current_dir=$(pwd)这个有点问题，因为执行脚本的时候，不一定在这个脚本所在目录。另外如果/opt中已经存在vcpkg目录的情况下，要询问是否删除后全新安装。另外如果两个bashrc脚本中都有vcpkg相关的配置的化，不用添加新的内容。
+
+安装环境还需要把alpine纳入考虑。

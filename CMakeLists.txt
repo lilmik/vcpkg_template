@@ -16,6 +16,7 @@ project(qt_app VERSION 0.0.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 使用 project() 的版本号
 set(APP_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -178,14 +179,33 @@ set(DEBUG_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/output/debug" CACHE PATH "Debug output
 set(RELEASE_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/output/release" CACHE PATH "Release output directory")
 
 # 查找依赖
-find_package(Qt6 REQUIRED COMPONENTS Core Scxml)
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    Scxml
+    StateMachine
+)
 find_package(Drogon REQUIRED)
 find_package(gRPC REQUIRED)
 
 
+find_package(SOCI REQUIRED)          # 查找 SOCI 及数据库后端（vcpkg 已自动处理依赖）
+find_package(unofficial-sqlite3 REQUIRED)       # SQLite3 后端依赖
+# find_package(unofficial-libmysql REQUIRED)         # MySQL 后端依赖（vcpkg 包名 mysql-client，CMake 目标是 MySQL::mysqlclient）
+# find_package(PostgreSQL REQUIRED)    # PostgreSQL 后端依赖
+
+# -------------------------- Qt 自动处理（MOC/RCC/UIC） --------------------------
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 # 添加可执行文件
 add_executable(qt_app
-    src/main.cpp 
+    src/main.cc
+    src/sqlite3statemanager.h
+    src/sqlite3statemanager.cc
+
+    statemachine/statemachine.scxml
+    statemachine/sqlite3_init_statemachine.scxml
 )
 
 
@@ -202,15 +222,36 @@ target_link_libraries(qt_app
     PRIVATE 
     Qt6::Core
     Qt6::Scxml
+    Qt6::StateMachine
+
     Drogon::Drogon
     gRPC::grpc
+
+    $<IF:$<TARGET_EXISTS:SOCI::soci_core>,SOCI::soci_core,SOCI::soci_core_static>
+    # soci_sqlite3
+    $<IF:$<TARGET_EXISTS:SOCI::soci_sqlite3>,SOCI::soci_sqlite3,SOCI::soci_sqlite3_static>
+    unofficial::sqlite3::sqlite3
+
+    # unofficial::libmysql::libmysql
+    # PostgreSQL::PostgreSQL  # SOCI PostgreSQL 后端
+
 )
 
-# === 把 XML 状态机文件拷贝到构建目录，运行时能直接读到 ===
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/statemachine.scxml
-    ${CMAKE_CURRENT_BINARY_DIR}/statemachine.scxml
-    COPYONLY
+# # === 把 XML 状态机文件拷贝到构建目录，运行时能直接读到 ===
+# configure_file(
+#     ${CMAKE_CURRENT_SOURCE_DIR}/statemachine/statemachine.scxml
+#     ${CMAKE_CURRENT_BINARY_DIR}/statemachine/statemachine.scxml
+#     COPYONLY
+# )
+# 定义源目录和目标目录
+set(STATEMACHINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/statemachine)
+set(STATEMACHINE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/statemachine)
+
+# 自定义目标来拷贝状态机文件
+add_custom_target(copy_statemachine ALL
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${STATEMACHINE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${STATEMACHINE_SOURCE_DIR} ${STATEMACHINE_BINARY_DIR}
+    COMMENT "拷贝状态机文件到构建目录"
 )
 
 

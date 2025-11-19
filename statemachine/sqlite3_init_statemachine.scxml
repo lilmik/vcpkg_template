@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="SQLite3InitStateMachine" qt:editorversion="18.0.0" initial="init">
+    <qt:editorinfo initialGeometry="-154.51;14;-20;-20;40;40"/>
+    <state id="init">
+        <qt:editorinfo scenegeometry="0;0;-60;-50;192.84;128" geometry="0;0;-60;-50;192.84;128"/>
+        <onentry>
+            <send event="reset.retry.count"/>
+            <send event="check.database" delay="1ms"/>
+        </onentry>
+        <transition type="external" event="db.create.success" target="idle">
+            <qt:editorinfo endTargetFactors="24.64;8.20" startTargetFactors="24.64;91.39" movePoint="-48.75;7.13"/>
+        </transition>
+        <transition type="external" event="db.create.fail" target="error"/>
+        <transition type="external" event="db.exists" target="idle">
+            <qt:editorinfo endTargetFactors="76.83;9.03" startTargetFactors="76.83;94" movePoint="40.43;2.38"/>
+        </transition>
+        <transition type="external" event="error.occurred" target="error">
+            <qt:editorinfo endTargetFactors="5.63;74.79" startTargetFactors="94.10;74.79"/>
+        </transition>
+    </state>
+    <state id="idle">
+        <qt:editorinfo scenegeometry="0;392.37;-60;342.37;192.84;128" geometry="0;392.37;-60;-50;192.84;128"/>
+        <onentry>
+            <send event="reset.retry.count"/>
+            <send event="record.state" namelist="'idle'"/>
+        </onentry>
+        <transition type="external" event="start" target="running">
+            <qt:editorinfo endTargetFactors="25.12;4.54" startTargetFactors="25.12;91.82" movePoint="-13.08;16.64" movePointCond="-15.45;20.21"/>
+        </transition>
+        <transition type="external" event="shutdown" target="final"/>
+        <transition type="external" event="error.occurred" target="error">
+            <qt:editorinfo movePoint="-29.72;-1.19"/>
+        </transition>
+    </state>
+    <state id="running">
+        <qt:editorinfo scenegeometry="0;596.88;-60;546.88;192.84;191.91" geometry="0;596.88;-60;-50;192.84;191.91"/>
+        <onentry>
+            <send event="reset.retry.count"/>
+            <send event="start.actual.task"/>
+            <send event="record.state" namelist="'running'"/>
+        </onentry>
+        <onexit>
+            <send event="stop.actual.task"/>
+        </onexit>
+        <transition type="external" event="stop" target="idle">
+            <qt:editorinfo endTargetFactors="72.47;89.32" startTargetFactors="72.47;6.57" movePoint="28.53;14.27" movePointCond="17.83;-2.38"/>
+        </transition>
+        <transition type="external" event="error.occurred" target="error">
+            <qt:editorinfo endTargetFactors="94.08;60.84" localGeometry="526.25;0;526.25;-670.72" startTargetFactors="93.14;77.65" movePoint="-278.23;335.30" movePointCond="-175.97;357.89"/>
+        </transition>
+        <transition type="external" event="task.error" target="error">
+            <qt:editorinfo endTargetFactors="85.26;92.81" localGeometry="481.46;0" startTargetFactors="94.10;61.55" movePointCond="-3.57;-19.02"/>
+        </transition>
+    </state>
+    <state id="error">
+        <qt:editorinfo scenegeometry="517.21;0;457.21;-50;172.56;128" geometry="517.21;0;-60;-50;172.56;128"/>
+        <onentry>
+            <send event="record.state" namelist="'error'"/>
+            <send event="handle.error"/>
+        </onentry>
+        <transition type="external" event="retry.init" target="init">
+            <qt:editorinfo endTargetFactors="93.44;23.76" startTargetFactors="6.89;23.76"/>
+        </transition>
+        <transition type="external" event="retry.idle" target="idle">
+            <qt:editorinfo endTargetFactors="92.50;33.40" startTargetFactors="34.39;89.20" movePoint="34.48;26.16" movePointCond="34.48;21.40"/>
+        </transition>
+        <transition type="external" event="retry.running" target="running">
+            <qt:editorinfo endTargetFactors="90.29;41.04" localGeometry="0;550.88" startTargetFactors="70.71;91.20" movePoint="-217.59;273.47" movePointCond="146.25;171.22"/>
+        </transition>
+        <transition type="external" event="shutdown" target="final">
+            <qt:editorinfo movePoint="-28.54;5.94" movePointCond="-42.80;-2.38"/>
+        </transition>
+    </state>
+    <final id="final">
+        <qt:editorinfo scenegeometry="543.49;406.37;523.49;386.37;40;40" geometry="543.49;406.37;-20;-20;40;40"/>
+        <onentry>
+            <send event="record.state" namelist="'final'"/>
+        </onentry>
+    </final>
+</scxml>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" name="SimpleStateMachine" qt:editorversion="18.0.0" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" initial="idle">
+    <qt:editorinfo initialGeometry="-200;-100;-20;-20;40;40"/>
+    <state id="idle">
+        <qt:editorinfo scenegeometry="-90;-1;-150;-50;120;100" geometry="-90;-1;-60;-49;120;100"/>
+        <onentry>
+            <log label="state" expr="'Enter idle'"/>
+        </onentry>
+        <transition type="internal" event="start" target="running">
+            <qt:editorinfo movePoint="-25.74;-1.22"/>
+        </transition>
+    </state>
+    <state id="running">
+        <qt:editorinfo scenegeometry="186.68;-1;126.68;-50;120;100" geometry="186.68;-1;-60;-49;120;100"/>
+        <onentry>
+            <log label="state" expr="'Enter running'"/>
+        </onentry>
+        <transition type="internal" event="stop" target="idle">
+            <qt:editorinfo movePoint="15.93;-1.23"/>
+        </transition>
+    </state>
+</scxml>
