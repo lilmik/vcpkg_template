@@ -201,11 +201,16 @@ set(CMAKE_AUTOUIC ON)
 # 添加可执行文件
 add_executable(qt_app
     src/main.cc
-    src/sqlite3statemanager.h
-    src/sqlite3statemanager.cc
+
+    src/sqlite3statemachine.h
+    src/sqlite3statemachine.cc
 
     statemachine/statemachine.scxml
     statemachine/sqlite3_init_statemachine.scxml
+    src/operationrequest.h
+    src/sqlite3handler.h src/sqlite3handler.cc
+    src/dboperatethread.h src/dboperatethread.cc
+    src/main.h
 )
 
 
